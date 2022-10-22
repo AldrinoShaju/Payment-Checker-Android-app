@@ -163,4 +163,23 @@ public class Repository {
 
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
+
+    public void settleTransactions(final AsyncResponse callback, int settleAmt, String custId) {
+
+        //eg: https://paycheck-api.herokuapp.com/txn/settle?custId=123&payedAmount=12
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PATCH, PaycheckApiEndPoints.SETTLE_TXN+"custId="+custId+"&payedAmount="+settleAmt, null, response -> {
+            Log.d("settleTxn", "resp: "+response.toString());
+
+            if(callback!=null) {
+                try {
+                    callback.processFinished(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, Exception::printStackTrace);
+
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+    }
 }

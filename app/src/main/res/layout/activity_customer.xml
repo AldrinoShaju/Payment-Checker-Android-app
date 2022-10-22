@@ -147,5 +147,6 @@
 
         <include layout="@layout/transaction_bottom_sheet_pay"/>
         <include layout="@layout/transaction_bottom_sheet_newtxn"/>
+        <include layout="@layout/transaction_bottom_sheet_settle"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

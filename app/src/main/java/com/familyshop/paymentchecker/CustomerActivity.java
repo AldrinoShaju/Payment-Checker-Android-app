@@ -48,6 +48,7 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
 
     private BottomSheetNewTransactionFragment bottomSheetNewTransactionFragment;
     private BottomSheetPayTransactionFragment bottomSheetPayTransactionFragment;
+    private BottomSheetSettleTransactionFragment bottomSheetSettleTransactionFragment;
 
     public static int currTxnPosition = 0;
 
@@ -117,9 +118,20 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
         BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior1 = BottomSheetBehavior.from(constraintLayout1);
         bottomSheetBehavior1.setPeekHeight(BottomSheetBehavior.STATE_HIDDEN);
 
+        bottomSheetSettleTransactionFragment = new BottomSheetSettleTransactionFragment();
+        ConstraintLayout constraintLayout2 = findViewById(R.id.settleTxnBottomSheet);
+        BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior2 = BottomSheetBehavior.from(constraintLayout2);
+        bottomSheetBehavior2.setPeekHeight(BottomSheetBehavior.STATE_HIDDEN);
+
         addTxnBtn.setOnClickListener(view -> {
             bottomSheetNewTransactionFragment.show(getSupportFragmentManager(), bottomSheetNewTransactionFragment.getTag());
         });
+
+        settleBtn.setOnClickListener(view -> {
+            bottomSheetSettleTransactionFragment.show(getSupportFragmentManager(), bottomSheetSettleTransactionFragment.getTag());
+        });
+
+
     }
 
     private void loadTransactionListUI(Customer customer) {
