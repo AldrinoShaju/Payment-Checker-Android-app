@@ -1,9 +1,8 @@
 package com.familyshop.paymentchecker.fragment;
 
-import static android.content.ContentValues.TAG;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ import com.familyshop.paymentchecker.R;
 import com.familyshop.paymentchecker.data.Repository;
 import com.familyshop.paymentchecker.models.TransactionRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-
-import org.json.JSONException;
 
 public class BottomSheetNewTransactionFragment extends BottomSheetDialogFragment {
 
@@ -46,13 +43,13 @@ public class BottomSheetNewTransactionFragment extends BottomSheetDialogFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         addNewTxn.setOnClickListener(view1 -> {
-            Log.d(TAG, "onViewCreated: " + "add new Txn button clicked ");
+
             int totalAmount = Integer.valueOf(this.totalAmount.getText().toString());
             int payed= Integer.valueOf(payedAmount.getText().toString());
             String txnNote = this.txnNote.getText().toString().trim();
             TransactionRequest request = new TransactionRequest(txnNote, totalAmount, payed);
             new Repository().addTransaction(response ->{
-                int status = response.getInt("status");
+                int status = response.getInt(STATUS);
                 if(status==201) {
                     Toast.makeText(getContext(), "Added new Txn", Toast.LENGTH_SHORT).show();
                 }else {

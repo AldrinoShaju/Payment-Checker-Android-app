@@ -1,9 +1,8 @@
 package com.familyshop.paymentchecker.fragment;
 
-import static android.content.ContentValues.TAG;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.familyshop.paymentchecker.CustomerActivity;
 import com.familyshop.paymentchecker.R;
 import com.familyshop.paymentchecker.data.Repository;
 import com.familyshop.paymentchecker.models.CustomerRequest;
-import com.familyshop.paymentchecker.models.TransactionRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomSheetCustomerFragment extends BottomSheetDialogFragment {
@@ -44,15 +41,15 @@ public class BottomSheetCustomerFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         saveCustomerBtn.setOnClickListener(view1 -> {
-            Log.d(TAG, "onViewCreated: " + "save customer button clicked");
+
             String customerName = custName.getText().toString();
             String phoneNumber = this.phoneNumber.getText().toString();
 
             CustomerRequest request = new CustomerRequest(customerName, phoneNumber);
             new Repository().saveCustomerDetails(response -> {
-                int status = response.getInt("status");
+                int status = response.getInt(STATUS);
                 if(status==201) {
-                    Toast.makeText(getContext(), "Txn Updated, Pls refresh", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Customer added, Pls refresh", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "Error occurred: "+status, Toast.LENGTH_SHORT).show();
                 }

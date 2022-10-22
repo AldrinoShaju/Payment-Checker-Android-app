@@ -1,9 +1,8 @@
 package com.familyshop.paymentchecker.fragment;
 
-import static android.content.ContentValues.TAG;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +38,13 @@ public class BottomSheetSettleTransactionFragment extends BottomSheetDialogFragm
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTxn.setOnClickListener(view1 -> {
-            Log.d(TAG, "onViewCreated: " + "settle txn button clicked");
+
             int totalAm = Integer.valueOf(payedAmount.getText().toString());
 
             new Repository().settleTransactions(response -> {
-                int status = response.getInt("status");
+                int status = response.getInt(STATUS);
                 if(status==201) {
-                    Toast.makeText(getContext(), "Txn payed, Pls refresh", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Txn settled, Pls refresh", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "Error occurred: "+status, Toast.LENGTH_SHORT).show();
                 }

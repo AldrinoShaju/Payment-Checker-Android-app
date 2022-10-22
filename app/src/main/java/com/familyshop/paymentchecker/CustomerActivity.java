@@ -1,15 +1,11 @@
 package com.familyshop.paymentchecker;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.DATA;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.MESSAGE;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +14,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.familyshop.paymentchecker.adapter.RecyclerViewTransactionAdapter;
 import com.familyshop.paymentchecker.data.Repository;
 import com.familyshop.paymentchecker.fragment.BottomSheetNewTransactionFragment;
 import com.familyshop.paymentchecker.fragment.BottomSheetPayTransactionFragment;
 import com.familyshop.paymentchecker.fragment.BottomSheetSettleTransactionFragment;
-import com.familyshop.paymentchecker.fragment.BottomSheetTransactionFragment;
 import com.familyshop.paymentchecker.models.Customer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,12 +65,11 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh_btn:
-//                loadTransactionListUI(new Customer());
                 progressLoading.setVisibility(View.VISIBLE);
                 new Repository().getSingleCustomerDetails((resp)-> {
-                    int status = resp.getInt("status");
+                    int status = resp.getInt(STATUS);
                     if(status==200) {
-                        data = (new Gson()).fromJson(resp.getString("message"), Customer.class);
+                        data = (new Gson()).fromJson(resp.getString(MESSAGE), Customer.class);
                         loadTransactionListUI(data);
                     }else {
 
@@ -101,7 +102,7 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
         recyclerViewTxn = findViewById(R.id.recycler_view_txn);
 
         Intent intent = getIntent();
-        data = (Customer) intent.getSerializableExtra("data");
+        data = (Customer) intent.getSerializableExtra(DATA);
 
         customerName.setText(data.getCustName());
         phoneNumber.setText(data.getPhoneNumber());
@@ -148,7 +149,6 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
 
     @Override
     public void onContactClick(int position) {
-        Log.d("Txn item", "onContactClick: "+data.getTxnList().get(position));
         currTxnPosition = position;
         bottomSheetPayTransactionFragment.show(getSupportFragmentManager(), bottomSheetPayTransactionFragment.getTag());
     }

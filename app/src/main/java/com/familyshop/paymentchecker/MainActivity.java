@@ -1,5 +1,17 @@
 package com.familyshop.paymentchecker;
 
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.DATA;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.MESSAGE;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,21 +19,17 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.familyshop.paymentchecker.adapter.RecyclerViewCustomerAdapter;
 import com.familyshop.paymentchecker.data.Repository;
 import com.familyshop.paymentchecker.fragment.BottomSheetCustomerFragment;
 import com.familyshop.paymentchecker.models.Customer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
             case R.id.refresh_btn:
                 loadCustomerListUI(new ArrayList<Customer>());
                 progressBar.setVisibility(View.VISIBLE);
-                new Repository().getAllCustomers((resp)-> loadCustomerListUI(resp));
+                new Repository().getAllCustomers((resp)-> convertResponseToCustomerList(resp));
                 Toast.makeText(this, "Refreshing Customer List", Toast.LENGTH_SHORT).show();
                 return true;
             default:
@@ -75,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
 
         addCustomerBtn.setOnClickListener(view -> showBottomCustomerFragment());
 
-        new Repository().getAllCustomers((resp)-> loadCustomerListUI(resp));
+        new Repository().getAllCustomers(response -> {
+            convertResponseToCustomerList(response);
+        });
 
     }
 
@@ -94,9 +104,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
 
     @Override
     public void onContactClick(int position) {
-        Log.d("List View click", "onContactClick: " + customerList.get(position).getCustId());
         Intent i = new Intent(this, CustomerActivity.class);
-        i.putExtra("data", customerList.get(position));
+        i.putExtra(DATA, customerList.get(position));
         startActivity(i);
     }
 
@@ -105,5 +114,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
         ConstraintLayout constraintLayout = findViewById(R.id.customerBottomSheet);
         BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior = BottomSheetBehavior.from(constraintLayout);
         bottomSheetBehavior.setPeekHeight(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    private void convertResponseToCustomerList(JSONObject response) {
+        List<Customer> customerList = new ArrayList<>();
+        try {
+            if(response.getInt(STATUS)==200) {
+                JSONArray allCustomerArray = response.getJSONArray(MESSAGE);
+                for(int i=0;i<allCustomerArray.length();i++) {
+                    customerList.add((new Gson()).fromJson(allCustomerArray.getString(i), Customer.class));
+                }
+            }else {
+                Toast.makeText(this, "Get Customer List failed, Try again later", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        loadCustomerListUI(customerList);
     }
 }

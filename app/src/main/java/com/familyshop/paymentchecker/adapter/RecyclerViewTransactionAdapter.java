@@ -1,10 +1,9 @@
 package com.familyshop.paymentchecker.adapter;
 
-import static android.content.ContentValues.TAG;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.DATE_TIME_PATTERN;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,6 @@ import com.familyshop.paymentchecker.models.Transaction;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +43,6 @@ public class RecyclerViewTransactionAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction transaction = transactionList.get(position);
-        Log.d(TAG, "onBindViewHolder: "+transaction.toString());
 
         holder.note.setText(transaction.getTxnNote()!=null?transaction.getTxnNote():"");
         holder.totalAmount.setText(String.valueOf(transaction.getTotalAmount()));
@@ -60,7 +56,7 @@ public class RecyclerViewTransactionAdapter extends RecyclerView.Adapter<Recycle
 
         String createdOn = transaction.getCreatedOn();
         long milliSec = Long.valueOf(createdOn);
-        DateFormat simple = new SimpleDateFormat("d MMM yyyy, HH:MMa");
+        DateFormat simple = new SimpleDateFormat(DATE_TIME_PATTERN);
         Date result = new Date(milliSec);
         holder.createdDate.setText(simple.format(result));
     }

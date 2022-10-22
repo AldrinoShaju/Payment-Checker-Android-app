@@ -1,9 +1,8 @@
 package com.familyshop.paymentchecker.fragment;
 
-import static android.content.ContentValues.TAG;
+import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class BottomSheetTransactionFragment extends BottomSheetDialogFragment {
         updateTxn = view.findViewById(R.id.button_update_txn);
 
         totalAmount.setText(String.valueOf(CustomerActivity.data.getTxnList().get(CustomerActivity.currTxnPosition).getTotalAmount()));
-//        payedAmount.setText(CustomerActivity.data.getTxnList().get(CustomerActivity.currTxnPosition).getPayable());
         txnNote.setText(CustomerActivity.data.getTxnList().get(CustomerActivity.currTxnPosition).getTxnNote());
         return view;
     }
@@ -47,14 +45,14 @@ public class BottomSheetTransactionFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         updateTxn.setOnClickListener(view1 -> {
-            Log.d(TAG, "onViewCreated: " + "update txn button clicked");
+
             int totalAm = Integer.valueOf(totalAmount.getText().toString());
             int payedAm = Integer.valueOf(payedAmount.getText().toString());
             String note = txnNote.getText().toString().trim();
 
             TransactionRequest request = new TransactionRequest(note, totalAm, payedAm);
             new Repository().updateTransaction(response -> {
-                int status = response.getInt("status");
+                int status = response.getInt(STATUS);
                 if(status==201) {
                     Toast.makeText(getContext(), "Txn Updated, Pls refresh", Toast.LENGTH_SHORT).show();
                 }else{
