@@ -22,6 +22,7 @@ import com.familyshop.paymentchecker.adapter.RecyclerViewTransactionAdapter;
 import com.familyshop.paymentchecker.data.Repository;
 import com.familyshop.paymentchecker.fragment.BottomSheetNewTransactionFragment;
 import com.familyshop.paymentchecker.fragment.BottomSheetPayTransactionFragment;
+import com.familyshop.paymentchecker.fragment.BottomSheetSettleTransactionFragment;
 import com.familyshop.paymentchecker.fragment.BottomSheetTransactionFragment;
 import com.familyshop.paymentchecker.models.Customer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
