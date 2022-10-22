@@ -39,8 +39,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="18sp"
-                    android:text="John XYZ"
-                    android:textColor="#000000" />
+                    android:text="@string/sample_name_text"
+                    android:theme="@style/textTheme" />
             </LinearLayout>
 
             <LinearLayout
@@ -58,8 +58,8 @@
                     android:gravity="center"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:text="2345"
-                    android:textColor="#000000" />
+                    android:text="@string/sample_rem_amt_text"
+                    android:theme="@style/textTheme"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

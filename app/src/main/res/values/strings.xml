@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Payment Checker</string>
+    <string name="settle_text">Settle</string>
+    <string name="sample_rem_amt_text">2345</string>
+    <string name="total_payable_text">Total Payable</string>
+    <string name="sample_num_text">873940347</string>
+    <string name="phone_number_text">Phone Number</string>
+    <string name="sample_name_text">John XYZ</string>
+    <string name="customer_name_text">Customer Name</string>
+    <string name="add_customer_btn_text">Add Customer</string>
+    <string name="add_customer_text">Add Customer</string>
+    <string name="payed_amount_text_hint">Payed Amount</string>
+    <string name="total_amount_text_hint">Total Amount</string>
+    <string name="enter_new_note_text_hint">Enter new note</string>
+    <string name="transaction_note_text_hint">Transaction Note</string>
+    <string name="submit_btn_text">submit</string>
+    <string name="add_transaction_text">Add Transaction</string>
+    <string name="pay_transaction_text">Pay Transaction</string>
+    <string name="settle_transaction_text">Settle Transaction</string>
+    <string name="sample_amt_text">200</string>
+    <string name="payable_text">Payable</string>
+    <string name="sample_payable_text">50</string>
+    <string name="created_on_text">Created On:</string>
+    <string name="sample_date_text">12th Oct 2022, 12:23am</string>
+    <string name="note_text">Note</string>
+    <string name="sample_note_text">Chips, drinks, bread</string>
 </resources>
