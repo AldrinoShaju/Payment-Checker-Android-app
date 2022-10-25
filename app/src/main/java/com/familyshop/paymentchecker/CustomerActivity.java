@@ -4,6 +4,7 @@ import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.DATA
 import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.MESSAGE;
 import static com.familyshop.paymentchecker.constants.PaymentCheckConstants.STATUS;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -33,7 +35,7 @@ import com.google.gson.Gson;
 
 import java.util.Collections;
 
-public class CustomerActivity extends AppCompatActivity implements RecyclerViewTransactionAdapter.onContactClickListener{
+public class CustomerActivity extends AppCompatActivity implements RecyclerViewTransactionAdapter.onContactClickListener, RecyclerViewTransactionAdapter.onLongContactClickListener{
 
     private TextView customerName;
     private TextView phoneNumber;
@@ -132,8 +134,6 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
         settleBtn.setOnClickListener(view -> {
             bottomSheetSettleTransactionFragment.show(getSupportFragmentManager(), bottomSheetSettleTransactionFragment.getTag());
         });
-
-
     }
 
     private void loadTransactionListUI(Customer customer) {
@@ -143,7 +143,7 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
         Collections.reverse(data.getTxnList());
         recyclerViewTxn.setHasFixedSize(true);
         recyclerViewTxn.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecyclerViewTransactionAdapter(data.getTxnList(), this, this);
+        adapter = new RecyclerViewTransactionAdapter(data.getTxnList(), this, this, this);
         recyclerViewTxn.setAdapter(adapter);
     }
 
@@ -151,5 +151,49 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
     public void onContactClick(int position) {
         currTxnPosition = position;
         bottomSheetPayTransactionFragment.show(getSupportFragmentManager(), bottomSheetPayTransactionFragment.getTag());
+    }
+
+    @Override
+    public boolean onLongContactClick(int position) {
+        Toast.makeText(this, "Long Click Detected", Toast.LENGTH_SHORT).show();
+        showAlertDeleteBox(position);
+        return true;
+    }
+
+    private void showAlertDeleteBox(int pos) {
+        // Create the object of AlertDialog Builder class
+        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerActivity.this);
+
+        // Set the message show for the Alert time
+        builder.setMessage("Do you want to delete this transaction?");
+
+        // Set Alert Title
+        builder.setTitle("Alert !");
+
+        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
+        builder.setCancelable(false);
+
+        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+            // If user click no then dialog box is canceled.
+            new Repository().deleteTransaction(resp->{
+                int status = resp.getInt("status");
+                if(status==201) {
+                    Toast.makeText(this, "Txn Deleted, refresh page", Toast.LENGTH_SHORT).show();
+                }
+                dialog.cancel();
+            }, data.getCustId(), data.getTxnList().get(pos).getTxnId());
+        });
+
+        // Set the Negative button with No name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+            // If user click no then dialog box is canceled.
+            dialog.cancel();
+        });
+
+        // Create the Alert dialog
+        AlertDialog alertDialog = builder.create();
+        // Show the Alert Dialog box
+        alertDialog.show();
     }
 }

@@ -6,7 +6,6 @@
     style="@style/Animation.Design.BottomSheetDialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fff"
     app:behavior_hideable="false"
     app:behavior_peekHeight="32dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -49,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settle_transaction_text"
-        android:textColor="#000000"
+        android:theme="@style/textTheme"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editText_settle_field"

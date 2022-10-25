@@ -209,4 +209,28 @@ public class Repository {
 
         AppController.getInstance().addToRequestQueue(jsonObjectRequest);
     }
+
+    public void deleteTransaction(final AsyncResponse callback, String custId, String txnId) {
+        StringBuilder sbEndPointURL = new StringBuilder(PaycheckApiEndPoints.DELETE_TXN);
+        sbEndPointURL.append(CUST_ID);
+        sbEndPointURL.append(custId);
+        sbEndPointURL.append(AND_TXN_ID);
+        sbEndPointURL.append(txnId);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
+                sbEndPointURL.toString(),
+                null, response -> {
+
+            if(callback!=null) {
+                try {
+                    callback.processFinished(response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, Exception::printStackTrace);
+
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+    }
 }

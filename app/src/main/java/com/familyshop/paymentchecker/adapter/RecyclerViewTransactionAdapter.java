@@ -23,20 +23,23 @@ import java.util.List;
 public class RecyclerViewTransactionAdapter extends RecyclerView.Adapter<RecyclerViewTransactionAdapter.ViewHolder>{
 
     private onContactClickListener onContactClickListener;
+    private onLongContactClickListener onLongContactClickListener;
+
     private List<Transaction> transactionList;
     private Context context;
 
-    public RecyclerViewTransactionAdapter(List<Transaction> transactionList, Context context, onContactClickListener onContactClickListener) {
+    public RecyclerViewTransactionAdapter(List<Transaction> transactionList, Context context, onContactClickListener onContactClickListener, onLongContactClickListener onLongContactClickListener) {
         this.transactionList = transactionList;
         this.context = context;
         this.onContactClickListener = onContactClickListener;
+        this.onLongContactClickListener = onLongContactClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.transaction_row, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view, onContactClickListener);
+        ViewHolder viewHolder = new ViewHolder(view, onContactClickListener, onLongContactClickListener);
         return viewHolder;
     }
 
@@ -67,31 +70,46 @@ public class RecyclerViewTransactionAdapter extends RecyclerView.Adapter<Recycle
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         onContactClickListener onContactClickListener;
+        onLongContactClickListener onLongContactClickListener;
         public TextView note;
         public TextView totalAmount;
         public TextView remaining;
         public TextView createdDate;
-        public ViewHolder(@NonNull View itemView, onContactClickListener onContactClickListener) {
+        public ViewHolder(@NonNull View itemView, onContactClickListener onContactClickListener, onLongContactClickListener onLongContactClickListener) {
             super(itemView);
 
             note = itemView.findViewById(R.id.textView_txn_note_field);
             totalAmount = itemView.findViewById(R.id.textView_txn_totalAmount_field);
             remaining = itemView.findViewById(R.id.textView_txn_payable_field);
             createdDate = itemView.findViewById(R.id.textView_txn_date_field);
+
             this.onContactClickListener = onContactClickListener;
+            this.onLongContactClickListener = onLongContactClickListener;
+
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             onContactClickListener.onContactClick(getAdapterPosition());
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            onLongContactClickListener.onLongContactClick(getAdapterPosition());
+            return true;
+        }
     }
 
     public interface onContactClickListener {
         void onContactClick(int position);
+    }
+
+    public interface onLongContactClickListener {
+        boolean onLongContactClick(int position);
     }
 
 }
