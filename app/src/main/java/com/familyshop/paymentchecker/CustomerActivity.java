@@ -162,7 +162,7 @@ public class CustomerActivity extends AppCompatActivity implements RecyclerViewT
 
     private void showAlertDeleteBox(int pos) {
         // Create the object of AlertDialog Builder class
-        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CustomerActivity.this, R.style.AlertDialogTheme);
 
         // Set the message show for the Alert time
         builder.setMessage("Do you want to delete this transaction?");

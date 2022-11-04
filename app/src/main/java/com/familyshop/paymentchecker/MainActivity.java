@@ -10,11 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +49,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
 
     private ProgressBar progressBar;
 
+    private TextView paymentIn;
+    private TextView paymentOut;
+
+    private CardView paymentSummary;
+
+    private int totalPayIn = 0;
+    private int totalPayOut = 0;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -58,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
         switch (item.getItemId()) {
             case R.id.refresh_btn:
                 loadCustomerListUI(new ArrayList<Customer>());
+                paymentSummary.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
+
                 new Repository().getAllCustomers((resp)-> convertResponseToCustomerList(resp));
                 Toast.makeText(this, "Refreshing Customer List", Toast.LENGTH_SHORT).show();
                 return true;
@@ -74,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
         setContentView(R.layout.activity_main);
         Toolbar customToolBar = findViewById(R.id.custom_toolbar);
         setSupportActionBar(customToolBar);
+
+        paymentIn = findViewById(R.id.textView_pay_in_edit);
+        paymentOut = findViewById(R.id.textView_pay_out_edit);
+
+        paymentSummary = findViewById(R.id.cardView_summary);
+        paymentSummary.setVisibility(View.INVISIBLE);
 
         recyclerViewCustomer = findViewById(R.id.recycler_view_customer);
         addCustomerBtn = findViewById(R.id.addButton);
@@ -100,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
         adapter = new RecyclerViewCustomerAdapter(customerList, this, this);
         recyclerViewCustomer.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
+        getTotalPaymentSummary();
+        paymentIn.setText(String.valueOf(totalPayIn));
+        paymentOut.setText(String.valueOf(totalPayOut));
+
+        paymentSummary.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -133,4 +156,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewCusto
 
         loadCustomerListUI(customerList);
     }
+
+    private void getTotalPaymentSummary() {
+        if(!customerList.isEmpty()) {
+            totalPayIn = customerList.stream().filter(cust->cust.getTotalPayable()>0).mapToInt(customer -> customer.getTotalPayable()).sum();
+            totalPayOut = customerList.stream().filter(cust->cust.getTotalPayable()<0).mapToInt(customer -> customer.getTotalPayable()).sum();
+        }
+    }
+
+
 }
