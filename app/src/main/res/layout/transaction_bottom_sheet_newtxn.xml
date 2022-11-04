@@ -5,9 +5,10 @@
     android:id="@+id/transactionBottomSheetNewTxn"
     style="@style/Animation.Design.BottomSheetDialog"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:behavior_hideable="false"
     app:behavior_peekHeight="32dp"
+    android:padding="20dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <EditText
@@ -67,6 +68,7 @@
         android:layout_marginRight="8dp"
         android:text="@string/submit_btn_text"
         android:theme="@style/buttonTheme"
+        android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
